@@ -22,39 +22,40 @@ def keyword_stats(resume_text: str, jd_text: str):
     missing = sorted(jset - rset)
 
     score = (len(common) / len(jset) * 100) if jset else 0.0
-...     top_jd = Counter(j).most_common(15)
-... 
-...     return score, common, missing, top_jd
-... 
-... st.set_page_config(page_title="ATS Resume Matcher", page_icon="📄")
-... 
-... st.title("📄 ATS Resume Keyword Matcher")
-... st.write("Compare your **Resume** vs a **Job Description** to get a keyword match score and missing terms.")
-... 
-... resume_text = st.text_area("Resume Text", height=220, placeholder="Paste your resume text here...")
-... jd_text = st.text_area("Job Description Text", height=220, placeholder="Paste the job description here...")
-... 
-... c1, c2 = st.columns(2)
-... analyze = c1.button("Analyze Match ✅")
-... clear = c2.button("Clear 🔄")
-... 
-... if clear:
-...     st.session_state.clear()
-...     st.rerun()
-... 
-... if analyze:
-...     if not resume_text.strip() or not jd_text.strip():
-...         st.warning("Please paste both Resume and Job Description text.")
-...     else:
-...         score, common, missing, top_jd = keyword_stats(resume_text, jd_text)
-... 
-...         st.subheader("✅ Match Score")
-...         st.metric("Keyword Match (%)", f"{score:.1f}%")
-... 
-...         st.subheader("🔍 Top Keywords in Job Description")
-...         st.write([f"{w} ({c})" for w, c in top_jd])
-... 
-...         st.subheader("✅ Keywords Found in Resume")
-...         st.write(common if common else "No common keywords found.")
-... 
-...         st.subheader("⚠️ Missing Keywords (Add only if true for you)")
+    top_jd = Counter(j).most_common(15)
+
+    return score, common, missing, top_jd
+
+st.set_page_config(page_title="ATS Resume Matcher", page_icon="📄")
+
+st.title("📄 ATS Resume Keyword Matcher")
+st.write("Compare your **Resume** vs a **Job Description** to get a keyword match score and missing terms.")
+
+resume_text = st.text_area("Resume Text", height=220, placeholder="Paste your resume text here...")
+jd_text = st.text_area("Job Description Text", height=220, placeholder="Paste the job description here...")
+
+c1, c2 = st.columns(2)
+analyze = c1.button("Analyze Match ✅")
+clear = c2.button("Clear 🔄")
+
+if clear:
+    st.session_state.clear()
+    st.rerun()
+
+if analyze:
+    if not resume_text.strip() or not jd_text.strip():
+        st.warning("Please paste both Resume and Job Description text.")
+    else:
+        score, common, missing, top_jd = keyword_stats(resume_text, jd_text)
+
+        st.subheader("✅ Match Score")
+        st.metric("Keyword Match (%)", f"{score:.1f}%")
+
+        st.subheader("🔍 Top Keywords in Job Description")
+        st.write([f"{w} ({c})" for w, c in top_jd])
+
+        st.subheader("✅ Keywords Found in Resume")
+        st.write(common if common else "No common keywords found.")
+
+        st.subheader("⚠️ Missing Keywords (Add only if true for you)")
+        st.write(missing if missing else "Great! No missing keywords detected.")
